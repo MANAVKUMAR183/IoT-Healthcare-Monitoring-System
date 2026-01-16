@@ -1,6 +1,17 @@
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-import { app } from "./firebaseConfig.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 
+const firebaseConfig = {
+  apiKey: "AIzaSyBtn2u2lH6-0yfGRHIhXMnjFKtlgz7JBvI",
+  authDomain: "smart-healthcare-iot-5042b.firebaseapp.com",
+  databaseURL: "https://smart-healthcare-iot-5042b-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "smart-healthcare-iot-5042b",
+  storageBucket: "smart-healthcare-iot-5042b.appspot.com",
+  messagingSenderId: "789020289820",
+  appId: "1:789020289820:web:36dd0a30baeda1b73928d9"
+};
+
+const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 const heart = document.getElementById("heart");
@@ -12,16 +23,17 @@ const patientRef = ref(db, "patient");
 
 onValue(patientRef, (snapshot) => {
   const data = snapshot.val();
-
   if (data) {
     heart.innerText = data.heart;
     spo2.innerText = data.spo2;
     temp.innerText = data.temp;
 
-    if (data.spo2 < 92 || data.heart > 120 || data.temp > 38) {
-      status.innerText = "⚠️ EMERGENCY";
+    if (data.heart < 50 || data.heart > 120) {
+      status.innerText = "Emergency";
+    } else if (data.heart > 100) {
+      status.innerText = "Warning";
     } else {
-      status.innerText = "🟢 Normal";
+      status.innerText = "Normal";
     }
   }
 });
