@@ -1,4 +1,5 @@
 console.log("Dashboard JS loaded");
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 
@@ -24,25 +25,19 @@ const patientRef = ref(db, "patient");
 
 onValue(patientRef, (snapshot) => {
   const data = snapshot.val();
-  console.log("Firebase patient data:", data);
+  console.log("Firebase data:", data);
 
-  if (!data) {
-    console.log("No data found in Firebase!");
-    return;
-  }
+  if (data) {
+    heart.textContent = data.heart;
+    spo2.textContent = data.spo2;
+    temp.textContent = data.temp;
 
-  // Values show karo
-  heart.innerText = data.heart ?? "--";
-  spo2.innerText = data.spo2 ?? "--";
-  temp.innerText = data.temp ?? "--";
-
-  // Status logic
-  if (data.heart < 50 || data.heart > 120) {
-    status.innerText = "Emergency";
-  } else if (data.heart > 100) {
-    status.innerText = "Warning";
-  } else {
-    status.innerText = "Normal";
+    if (data.heart < 50 || data.heart > 120) {
+      status.textContent = "Emergency";
+    } else if (data.heart > 100) {
+      status.textContent = "Warning";
+    } else {
+      status.textContent = "Normal";
+    }
   }
 });
-
