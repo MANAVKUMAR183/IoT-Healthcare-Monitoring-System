@@ -25,19 +25,8 @@ const patientRef = ref(db, "patient");
 
 onValue(patientRef, (snapshot) => {
   const data = snapshot.val();
-  console.log("Firebase data:", data);
+  console.log("RAW DATA FROM FIREBASE:", data);
 
-  if (data) {
-    heart.textContent = data.heart;
-    spo2.textContent = data.spo2;
-    temp.textContent = data.temp;
-
-    if (data.heart < 50 || data.heart > 120) {
-      status.textContent = "Emergency";
-    } else if (data.heart > 100) {
-      status.textContent = "Warning";
-    } else {
-      status.textContent = "Normal";
-    }
-  }
+  document.body.innerHTML += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
 });
+
