@@ -1,4 +1,4 @@
-console.log("🔥 DIAGNOSTIC MODE");
+console.log("✅ Dashboard JS loaded");
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
@@ -15,12 +15,30 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+
+const heartEl = document.getElementById("heart");
+const spo2El = document.getElementById("spo2");
+const tempEl = document.getElementById("temp");
+const statusEl = document.getElementById("status");
+
 const patientRef = ref(db, "patient");
 
 onValue(patientRef, (snapshot) => {
   const data = snapshot.val();
-  console.log("RAW DATA FROM FIREBASE:", data);
+  console.log("Firebase data:", data);
 
-  // Page par JSON print kar do
-  document.body.innerHTML += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+  if (data) {
+    heartEl.innerText = data.heart ?? "--";
+    spo2El.innerText = data.spo2 ?? "--";
+    tempEl.innerText = data.temp ?? "--";
+
+    // Status logic based on heart rate
+    if (data.heart < 50 || data.heart > 120) {
+      statusEl.innerText = "🚨 Emergency";
+    } else if (data.heart > 100) {
+      statusEl.innerText = "⚠️ Warning";
+    } else {
+      statusEl.innerText = "✅ Normal";
+    }
+  }
 });
