@@ -1,4 +1,4 @@
-console.log("Dashboard JS loaded");
+console.log("🔥 DIAGNOSTIC MODE");
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
@@ -15,18 +15,12 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-
-const heart = document.getElementById("heart");
-const spo2 = document.getElementById("spo2");
-const temp = document.getElementById("temp");
-const status = document.getElementById("status");
-
 const patientRef = ref(db, "patient");
 
 onValue(patientRef, (snapshot) => {
   const data = snapshot.val();
   console.log("RAW DATA FROM FIREBASE:", data);
 
+  // Page par JSON print kar do
   document.body.innerHTML += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
 });
-
