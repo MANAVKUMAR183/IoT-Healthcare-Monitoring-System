@@ -4,13 +4,18 @@
   <meta charset="UTF-8">
   <title>Smart Healthcare Dashboard</title>
   <script type="module" src="dashboard.js"></script>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    p { font-size: 20px; margin: 10px 0; }
+    .value { font-weight: bold; }
+  </style>
 </head>
 <body>
   <h1>Patient Live Monitor</h1>
 
-  <p>❤️ Heart Rate: <span id="heart">--</span></p>
-  <p>🩸 SpO2: <span id="spo2">--</span></p>
-  <p>🌡 Temperature: <span id="temp">--</span></p>
-  <p>⚠️ Status: <span id="status">--</span></p>
+  <p>Heart Rate (BPM): <span id="heart" class="value">--</span></p>
+  <p>SpO2 (%): <span id="spo2" class="value">--</span></p>
+  <p>Temperature (°C): <span id="temp" class="value">--</span></p>
+  <p>Status: <span id="status" class="value">--</span></p>
 </body>
 </html>
