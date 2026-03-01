@@ -32,13 +32,16 @@ onValue(patientRef, (snapshot) => {
     spo2El.innerText = data.spo2 ?? "--";
     tempEl.innerText = data.temp ?? "--";
 
-    // Status logic based on heart rate
+    // Status logic
     if (data.heart < 50 || data.heart > 120) {
-      statusEl.innerText = "🚨 Emergency";
+      statusEl.innerText = "Emergency";
+      statusEl.style.color = "red";
     } else if (data.heart > 100) {
-      statusEl.innerText = "⚠️ Warning";
+      statusEl.innerText = "Warning";
+      statusEl.style.color = "orange";
     } else {
-      statusEl.innerText = "✅ Normal";
+      statusEl.innerText = "Normal";
+      statusEl.style.color = "green";
     }
   }
 });
