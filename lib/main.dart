@@ -1,65 +1,100 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'screens/splash_screen.dart';
+import 'screens/login_screen.dart';
+import 'screens/patient_dashboard.dart';
+import 'screens/device_management_screen.dart';
+import 'screens/health_monitoring_screen.dart';
+import 'screens/alerts_screen.dart';
+import 'screens/chatbot_screen.dart';
+import 'services/api_service.dart';
+import 'services/auth_service.dart';
+import 'providers/health_data_provider.dart';
+import 'providers/auth_provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(const SmartHealthcareApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class SmartHealthcareApp extends StatelessWidget {
+  const SmartHealthcareApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Smart Healthcare',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: const Dashboard(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
-
-class Dashboard extends StatelessWidget {
-  const Dashboard({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Smart Healthcare'),
-        backgroundColor: Colors.blue,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: GridView.count(
-          crossAxisCount: 2,
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
-          children: [
-            _buildCard('Heart Rate', '72 BPM', Icons.favorite, Colors.red),
-            _buildCard('BP', '120/80', Icons.monitor_heart, Colors.blue),
-            _buildCard('Temperature', '98.6°F', Icons.thermostat, Colors.orange),
-            _buildCard('Oxygen', '98%', Icons.air, Colors.green),
-          ],
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => HealthDataProvider()),
+        Provider(create: (_) => ApiService()),
+        Provider(create: (_) => AuthService()),
+      ],
+      child: MaterialApp(
+        title: 'IoT Healthcare Monitor',
+        theme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color(0xFF667EEA),
+            brightness: Brightness.light,
+          ),
+          fontFamily: 'Inter',
+          cardTheme: CardTheme(
+            elevation: 8,
+            shadowColor: Colors.black.withOpacity(0.1),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+          ),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              elevation: 4,
+              shadowColor: Colors.black.withOpacity(0.2),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            ),
+          ),
+          inputDecorationTheme: InputDecorationTheme(
+            filled: true,
+            fillColor: Colors.grey.shade50,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: Colors.grey.shade300),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Color(0xFF667EEA), width: 2),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.red),
+            ),
+          ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildCard(String title, String value, IconData icon, Color color) {
-    return Card(
-      color: Colors.white,
-      elevation: 4,
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 50, color: color),
-            const SizedBox(height: 10),
-            Text(value, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-            Text(title, style: const TextStyle(fontSize: 16)),
-          ],
+        darkTheme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color(0xFF667EEA),
+            brightness: Brightness.dark,
+          ),
+          fontFamily: 'Inter',
         ),
+        home: const SplashScreen(),
+        routes: {
+          '/login': (context) => const LoginScreen(),
+          '/dashboard': (context) => const PatientDashboard(),
+          '/devices': (context) => const DeviceManagementScreen(),
+          '/monitoring': (context) => const HealthMonitoringScreen(),
+          '/alerts': (context) => const AlertsScreen(),
+          '/chatbot': (context) => const ChatbotScreen(),
+        },
+        debugShowCheckedModeBanner: false,
       ),
     );
   }
-}
+} 
